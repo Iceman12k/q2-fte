@@ -1,0 +1,31 @@
+../../csprogs.dat
+#define CSQC
+fteextensions.qc
+
+../shared/const.qc
+../shared/tools.qc
+
+clientdefs.qc
+../shared/player_defs.qc
+
+../shared/anim_defs.qc
+../shared/weapons/weapon_defs.qc
+../shared/weapons/blaster.qc
+../shared/weapons/shotgun.qc
+../shared/weapons/supershotgun.qc
+../shared/weapons/machinegun.qc
+../shared/weapons/chaingun.qc
+../shared/weapons/handgrenade.qc
+../shared/weapons/grenadelauncher.qc
+../shared/weapons/rocketlauncher.qc
+../shared/weapons/hyperblaster.qc
+../shared/weapons/railgun.qc
+../shared/weapons/weapons.qc
+
+// player
+../shared/phys.qc
+../shared/pl.qc
+cs_player.qc
+
+hud.qc
+main.qc

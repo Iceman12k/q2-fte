@@ -1,0 +1,11 @@
+
+baseq2/*
+*.lnk
+q2fte/screenshots/*
+q2fte/csprogsvers/*
+q2fte/fte.cfg
+q2fte/ssqccore.txt
+q2fte/csqccore.txt
+conhistory.txt
+*.sav
+installed.lst

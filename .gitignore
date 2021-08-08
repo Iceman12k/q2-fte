@@ -9,3 +9,7 @@ q2fte/csqccore.txt
 conhistory.txt
 *.sav
 installed.lst
+q2fte/progs.dat
+q2fte/progs.lno
+q2fte/csprogs.lno
+q2fte/csprogs.dat

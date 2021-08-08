@@ -1,6 +1,6 @@
 
 
-float autocvar_cl_drawhud
+float autocvar_cl_drawhud;
 
 
 void Draw_Q2Numbers(vector pos, float scale, int value, string numstyle)

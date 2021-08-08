@@ -72,6 +72,7 @@ void W_Init()
 	RocketLauncher_Init();
 	Hyperblaster_Init();
 	Railgun_Init();
+	BFG_Init();
 }
 
 

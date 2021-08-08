@@ -20,6 +20,7 @@ clientdefs.qc
 ../shared/weapons/rocketlauncher.qc
 ../shared/weapons/hyperblaster.qc
 ../shared/weapons/railgun.qc
+../shared/weapons/bfg10k.qc
 ../shared/weapons/weapons.qc
 
 // player

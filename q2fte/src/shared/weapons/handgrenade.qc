@@ -72,7 +72,7 @@ void HandGrenade_Init()
 	wep->netname = "Hand Grenades";
 	wep->v_model = "models/weapons/v_handgr/tris";
 	wep->w_model = "models/weapons/v_handgr/tris";
-	wep->h_model = "w_hgrenade";
+	wep->h_model = "a_grenades";
 	wep->icon = "pics/w_hgrenade";
 	wep->frame_func = HandGrenade_Frame;
 	wep->draw_time = 0.4;

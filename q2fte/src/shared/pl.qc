@@ -171,7 +171,7 @@ void PL_CheckFootsteps(entity ent)
 }
 
 
-#define PLAYER_PHYSFPS 1/115
+#define PLAYER_PHYSFPS 1/90
 
 void PL_RunPhysics()
 {

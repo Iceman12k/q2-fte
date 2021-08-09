@@ -5,6 +5,7 @@ float	view_fov;
 
 float	prediction_effectframe;
 float	prediction_playeffects;
+int 	prediction_thinktrigger;
 
 float	is_spectator;
 float	cmd_forceimpulse;
@@ -12,6 +13,12 @@ float	cmd_forceimpulse;
 .float	lerp_time;
 .float	lerp_stepsize;
 .float	skin_shader;
+
+.vector	vdmg_angles;
+.vector	vdmg_last;
+.vector	vdmg_current;
+.float	vdmg_time;
+.float	vdmg_lerptime;
 
 const int FONT_HUD = 1;
 

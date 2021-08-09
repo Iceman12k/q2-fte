@@ -3,9 +3,6 @@ void PL_SendViewkick(entity ent, float start, float goal, float speed1, float sp
 void PlayerRespawn();
 #endif
 
-#define PLAYER_THINKFPS 	1/10
-#define PLAYER_PHYSFPS 		1/90
-
 void PL_SetSize(entity ent)
 {
 	if (ent.moveflags & MF_CROUCHED)
@@ -29,6 +26,7 @@ void PL_CheckWeaponSwitch(entity ent)
 	Weapon_Putaway(ent);
 }
 
+
 void PL_CheckThink(entity ent)
 {
 	if (ent.client_time < ent.think_time)
@@ -50,6 +48,13 @@ void PL_CheckThink(entity ent)
 	
 	ent.viewkick_origin = 0;
 	ent.viewkick_angles = 0;
+	
+	#ifdef CSQC
+	if (prediction_playeffects)
+	{
+		prediction_thinktrigger = TRUE;
+	}
+	#endif
 }
 
 void PL_CheckImpulse(entity ent)

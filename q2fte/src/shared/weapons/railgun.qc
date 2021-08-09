@@ -34,7 +34,7 @@ void Railgun_Fire(entity ent)
 	#ifdef CSQC
 	if (prediction_playeffects)
 	{
-		localsound("weapons/railgf1a", CHAN_WEAPONSHOOT1, 1);
+		localsound("weapons/railgf1a", CHAN_WEAPON, 1);
 	}
 	#endif
 	
@@ -85,7 +85,11 @@ void Railgun_Init()
 	anim->loop = TRUE;
 	for(i = 19; i <= 56; i++)
 	{
-		Anim_AddFrame(&(anim->frame_list_head), &(anim->frame_list_tail), i, 10, __NULL__, __NULL__);
+		string snd = __NULL__;
+		if ((i - 19) % 10 == 0)
+			snd = "weapons/rg_hum";
+		
+		Anim_AddFrame(&(anim->frame_list_head), &(anim->frame_list_tail), i, 10, __NULL__, snd);
 	}
 	
 	

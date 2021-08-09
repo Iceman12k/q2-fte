@@ -97,7 +97,8 @@ void PlayerSpawn()
 	self.armorvalue = 0;
 	self.armortype = 0;
 	
-	self.health = 100;
+	self.max_health = 100;
+	self.health = self.max_health;
 	self.damage_from = world;
 	
 	setorigin(self, self.spawnpoint.origin + [0,0,1]);

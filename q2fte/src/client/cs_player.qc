@@ -357,8 +357,29 @@ float PL_LocalThink()
 	vector v_angles = view_angles;
 	makevectors(view_angles);
 	
-	float frac = (self.think_time - self.client_time) / 0.1;
 	int i;
+	float frac;
+	if (cltime >= self.vdmg_lerptime)
+	{
+		self.vdmg_lerptime = cltime + 0.1;
+		
+		float amt = (self.vdmg_time - cltime) / 0.5;
+		amt = bound(0, amt, 1);
+		
+		self.vdmg_last = self.vdmg_current;
+		self.vdmg_current = self.vdmg_angles * (amt);
+	}
+	
+	frac = (self.vdmg_lerptime - cltime) / 0.1;
+	for(i = 0; i < 3; i++)
+	{
+		v_angles[i] += lerp(self.vdmg_current[i], self.vdmg_last[i], frac);
+	}
+	
+	
+	
+	
+	frac = (self.think_time - self.client_time) / 0.1;
 	for(i = 0; i < 3; i++)
 	{
 		v_angles[i] += lerp(self.viewkick_angles_g[i], self.viewkick_angles_l[i], frac);

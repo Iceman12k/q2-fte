@@ -33,6 +33,18 @@ void BFG_Frame(entity ent)
 void BFG_Fire(entity ent)
 {
 	ent.ammo_inventory[AMMO_CELLS] -= 50;
+	
+	self.viewkick_origin[1] = -2;
+	
+	#ifdef CSQC
+	if (prediction_playeffects)
+	{
+		self.vdmg_angles[0] = -30;
+		self.vdmg_angles[2] = 8 * PL_PRandom_C(ent.client_time);
+		self.vdmg_time = cltime + 0.5;
+		self.vdmg_lerptime = cltime;
+	}
+	#endif
 }
 
 

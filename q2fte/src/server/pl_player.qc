@@ -124,7 +124,7 @@ void PlayerSpawn()
 	self.weapon_inventory[WEP_BLASTER] = 1;
 	self.weapon_inventory[WEP_HANDGRENADE] = 1;
 	
-	///*
+	/*
 	self.weapon = WEP_BFG10K;
 	self.weapon_wanted = WEP_BFG10K;
 	self.ammo_inventory[(WeaponList[self.weapon])->ammo_pool] = 50;

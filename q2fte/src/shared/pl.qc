@@ -3,6 +3,9 @@ void PL_SendViewkick(entity ent, float start, float goal, float speed1, float sp
 void PlayerRespawn();
 #endif
 
+#define PLAYER_THINKFPS 	1/10
+#define PLAYER_PHYSFPS 		1/90
+
 void PL_SetSize(entity ent)
 {
 	if (ent.moveflags & MF_CROUCHED)
@@ -24,6 +27,22 @@ void PL_CheckWeaponSwitch(entity ent)
 		return;
 	
 	Weapon_Putaway(ent);
+}
+
+void PL_CheckThink(entity ent)
+{
+	if (ent.client_time < ent.think_time)
+		return;
+	
+	ent.think_time = ent.client_time + PLAYER_THINKFPS;
+	
+	ent.viewkick_origin_l = ent.viewkick_origin_g;
+	ent.viewkick_angles_l = ent.viewkick_angles_g;
+	ent.viewkick_origin_g = ent.viewkick_origin;
+	ent.viewkick_angles_g = ent.viewkick_angles;
+	
+	ent.viewkick_origin = 0;
+	ent.viewkick_angles = 0;
 }
 
 void PL_CheckImpulse(entity ent)
@@ -171,8 +190,6 @@ void PL_CheckFootsteps(entity ent)
 }
 
 
-#define PLAYER_PHYSFPS 1/90
-
 void PL_RunPhysics()
 {
 	makevectors(input_angles);
@@ -299,6 +316,7 @@ void PL_RunPhysics()
 				break;
 		}
 		
+		PL_CheckThink(self);
 		PL_CheckImpulse(self);
 		PL_CheckWeaponSwitch(self);
 		PL_WeaponSimulate(self, delta);

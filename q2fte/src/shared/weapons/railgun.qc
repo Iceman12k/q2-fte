@@ -33,6 +33,9 @@ void Railgun_Fire(entity ent)
 		localsound("weapons/railgf1a", CHAN_WEAPONSHOOT1, 1);
 	}
 	#endif
+	
+	ent.viewkick_origin[1] = -3;
+    ent.viewkick_angles[0] = -3;
 }
 
 

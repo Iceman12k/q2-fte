@@ -37,3 +37,11 @@
 .float		sview_height;
 .float		input_lastbuttons;
 
+.float		think_time;
+.vector		viewkick_origin;
+.vector		viewkick_angles;
+.vector		viewkick_origin_l;
+.vector		viewkick_angles_l;
+.vector		viewkick_origin_g;
+.vector		viewkick_angles_g;
+

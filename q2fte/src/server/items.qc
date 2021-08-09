@@ -372,6 +372,22 @@ void spawnfunc_weapon_hyperblaster()
 		self.respawn_time = RESPAWNTIME_WEAPON;
 }
 
+void spawnfunc_weapon_bfg10k()
+{
+	self.weapon = WEP_BFG10K;
+	self.model = (WeaponList[self.weapon])->w_model;
+	self.noise = "misc/w_pkup";
+	self.modelflags = MF_ROTATE;
+	IT_WeaponPickup();
+	
+	self.weapon_inventory[self.weapon] = 1;
+	self.ammo_inventory[(WeaponList[self.weapon])->ammo_pool] = 50;
+	
+	if !(self.respawn_time)
+		self.respawn_time = RESPAWNTIME_WEAPON;
+}
+
+
 void spawnfunc_ammo_slugs()
 {
 	self.model = "models/items/ammo/slugs/medium/tris";

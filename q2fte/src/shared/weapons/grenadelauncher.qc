@@ -28,6 +28,9 @@ void GrenadeLauncher_Frame(entity ent)
 			localsound("weapons/grenlf1a", CHAN_WEAPONSHOOT1, 1);
 		}
 		#endif
+		
+		ent.viewkick_origin[1] = -1;
+		ent.viewkick_angles[0] = -2;
 	}
 }
 

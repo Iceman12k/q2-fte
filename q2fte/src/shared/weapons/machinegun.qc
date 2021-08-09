@@ -41,6 +41,13 @@ void Machinegun_Frame(entity ent)
 			localsound(snd, CHAN_WEAPONSHOOT1 + ent.wep_firemode, 1);
 		}
 		#endif
+		
+		int i;
+		for (i = 1 ; i < 3 ; i++) {
+			ent.viewkick_origin[i] = crandom() * 0.35;
+			ent.viewkick_angles[i] = crandom() * 0.7;
+		}
+		ent.viewkick_origin[0] = crandom() * 0.35;
 	}
 }
 

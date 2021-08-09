@@ -28,6 +28,9 @@ void SuperShotgun_Frame(entity ent)
 			localsound("weapons/sshotf1b", CHAN_WEAPONSHOOT1, 1);
 		}
 		#endif
+		
+		ent.viewkick_origin[1] = -2;
+		ent.viewkick_angles[0] = -2;
 	}
 }
 

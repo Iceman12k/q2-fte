@@ -43,6 +43,14 @@ struct CLIENT_STATE {
 	
 	int		deadflags:8;
 	int		health:10;
+	
+	float	think_time;
+	vector	viewkick_origin;
+	vector	viewkick_angles;
+	vector	viewkick_origin_l;
+	vector	viewkick_angles_l;
+	vector	viewkick_origin_g;
+	vector	viewkick_angles_g;
 };
 .CLIENT_STATE *hold_state;
 .CLIENT_STATE *server_state;
@@ -90,6 +98,15 @@ void PL_Pred_UpdateState(CLIENT_STATE *state)
 	
 	state->flags = self.flags;
 	state->moveflags = self.moveflags;
+	
+	state->think_time = self.think_time;
+	state->viewkick_origin = self.viewkick_origin;
+	state->viewkick_origin_l = self.viewkick_origin_l;
+	state->viewkick_origin_g = self.viewkick_origin_g;
+	
+	state->viewkick_angles = self.viewkick_angles;
+	state->viewkick_angles_l = self.viewkick_angles_l;
+	state->viewkick_angles_g = self.viewkick_angles_g;
 }
 
 void PL_Pred_Restore(CLIENT_STATE *state)
@@ -127,6 +144,14 @@ void PL_Pred_Restore(CLIENT_STATE *state)
 	
 	self.health = state->health;
 	
+	self.think_time = state->think_time;
+	self.viewkick_origin = state->viewkick_origin;
+	self.viewkick_origin_l = state->viewkick_origin_l;
+	self.viewkick_origin_g = state->viewkick_origin_g;
+	
+	self.viewkick_angles = state->viewkick_angles;
+	self.viewkick_angles_l = state->viewkick_angles_l;
+	self.viewkick_angles_g = state->viewkick_angles_g;
 	
 	if (state.current_frame < clientcommandframe-128)
 		state.current_frame = clientcommandframe-128;	//avoid an infinite loop
@@ -328,16 +353,28 @@ float PL_LocalThink()
 		view_angles = self.v_angle;
 	}
 	
+	vector view_origin = self.origin;
 	vector v_angles = view_angles;
+	makevectors(view_angles);
+	
+	float frac = (self.think_time - self.client_time) / 0.1;
+	int i;
+	for(i = 0; i < 3; i++)
+	{
+		v_angles[i] += lerp(self.viewkick_angles_g[i], self.viewkick_angles_l[i], frac);
+	}
+	
+	view_origin += lerp(self.viewkick_origin_g[0], self.viewkick_origin_l[0], frac) * v_right;
+	view_origin += lerp(self.viewkick_origin_g[1], self.viewkick_origin_l[1], frac) * v_forward;
+	view_origin += lerp(self.viewkick_origin_g[2], self.viewkick_origin_l[2], frac) * v_up;
+	
+	
 	if (self.deadflags == DEAD_DEAD)
 	{
 		v_angles = last_alive_angle;
 		view_angles = last_alive_angle;
 	}
 	
-	makevectors(view_angles);
-	
-	vector view_origin = self.origin;
 	view_origin += self.origin_errorcorrect;
 	view_origin += self.view_ofs;
 	view_origin[2] += self.sview_height;
@@ -731,6 +768,26 @@ void EntUpdate_Player(float isnew)
 					(self.server_state)->weapon_inventory[i] = self.weapon_inventory[i];
 				}
 			}
+		}
+		
+		if (sendflags & 4096)
+		{
+			self.think_time = ReadFloat();
+			(self.server_state)->think_time = self.think_time;
+			
+			self.viewkick_origin = [ReadShort(), ReadShort(), ReadShort()] 		/ 100;
+			self.viewkick_origin_l = [ReadShort(), ReadShort(), ReadShort()] 	/ 100;
+			self.viewkick_origin_g = [ReadShort(), ReadShort(), ReadShort()] 	/ 100;
+			(self.server_state)->viewkick_origin = self.viewkick_origin;
+			(self.server_state)->viewkick_origin_l = self.viewkick_origin_l;
+			(self.server_state)->viewkick_origin_g = self.viewkick_origin_g;
+			
+			self.viewkick_angles = [ReadShort(), ReadShort(), ReadShort()] 		/ 100;
+			self.viewkick_angles_l = [ReadShort(), ReadShort(), ReadShort()] 	/ 100;
+			self.viewkick_angles_g = [ReadShort(), ReadShort(), ReadShort()] 	/ 100;
+			(self.server_state)->viewkick_angles = self.viewkick_angles;
+			(self.server_state)->viewkick_angles_l = self.viewkick_angles_l;
+			(self.server_state)->viewkick_angles_g = self.viewkick_angles_g;
 		}
 	}
 	

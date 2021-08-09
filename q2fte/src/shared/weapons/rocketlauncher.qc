@@ -28,6 +28,9 @@ void RocketLauncher_Frame(entity ent)
 			localsound("weapons/rocklf1a", CHAN_WEAPONSHOOT1, 1);
 		}
 		#endif
+		
+		ent.viewkick_origin[1] = -2;
+		ent.viewkick_angles[0] = -1;
 	}
 }
 

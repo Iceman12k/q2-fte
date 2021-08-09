@@ -105,6 +105,19 @@ void PL_Setup_Netsync()
 	{
 		netsync_addelement(self, findentityfield(strcat("weapon_inventory[", itos(i), "]")), 256);
 	}
+	
+	netsync_addelement(self, findentityfield("think_time"), 4096);
+	int i;
+	for(i = 0; i < 3; i++)
+	{
+		netsync_addelement(self, findentityfield(strcat("viewkick_origin[", itos(i), "]")), 4096);
+		netsync_addelement(self, findentityfield(strcat("viewkick_origin_l[", itos(i), "]")), 4096);
+		//netsync_addelement(self, findentityfield(strcat("viewkick_origin_g[", itos(i), "]")), 4096);
+		
+		netsync_addelement(self, findentityfield(strcat("viewkick_angles[", itos(i), "]")), 4096);
+		netsync_addelement(self, findentityfield(strcat("viewkick_angles_l[", itos(i), "]")), 4096);
+		//netsync_addelement(self, findentityfield(strcat("viewkick_angles_g[", itos(i), "]")), 4096);
+	}
 }
 
 
@@ -267,6 +280,19 @@ float PL_SendEntity(entity to, float sendflags)
 				else
 					WriteByte(MSG_ENTITY, self.weapon_inventory[i]);
 			}
+		}
+		
+		if (sendflags & 4096)
+		{
+			WriteFloat(MSG_ENTITY, self.think_time);
+			
+			WriteShort(MSG_ENTITY, self.viewkick_origin_x * 100); WriteShort(MSG_ENTITY, self.viewkick_origin_y * 100); WriteShort(MSG_ENTITY, self.viewkick_origin_z * 100);
+			WriteShort(MSG_ENTITY, self.viewkick_origin_l_x * 100); WriteShort(MSG_ENTITY, self.viewkick_origin_l_y * 100); WriteShort(MSG_ENTITY, self.viewkick_origin_l_z * 100);
+			WriteShort(MSG_ENTITY, self.viewkick_origin_g_x * 100); WriteShort(MSG_ENTITY, self.viewkick_origin_g_y * 100); WriteShort(MSG_ENTITY, self.viewkick_origin_g_z * 100);
+			
+			WriteShort(MSG_ENTITY, self.viewkick_angles_x * 100); WriteShort(MSG_ENTITY, self.viewkick_angles_y * 100); WriteShort(MSG_ENTITY, self.viewkick_angles_z * 100);
+			WriteShort(MSG_ENTITY, self.viewkick_angles_l_x * 100); WriteShort(MSG_ENTITY, self.viewkick_angles_l_y * 100); WriteShort(MSG_ENTITY, self.viewkick_angles_l_z * 100);
+			WriteShort(MSG_ENTITY, self.viewkick_angles_g_x * 100); WriteShort(MSG_ENTITY, self.viewkick_angles_g_y * 100); WriteShort(MSG_ENTITY, self.viewkick_angles_g_z * 100);
 		}
 	}
 	

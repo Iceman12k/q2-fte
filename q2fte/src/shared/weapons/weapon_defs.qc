@@ -124,3 +124,20 @@ void Weapon_Generic_OutofAmmo(entity ent)
 	}
 	#endif
 }
+
+
+
+float PL_PRandom(float seed)
+{
+	// The Reki patented "random enough, fuck it"
+	// pseudo random number generator yoinked from GLSL
+	
+	seed = sin(DotProduct([seed, seed * 32.5], '12.9898 78.233')) * 43758.5453;
+	
+	return (seed - floor(seed));
+}
+
+float PL_PRandom_C(float seed)
+{
+	return (PL_PRandom(seed) - 0.5) * 2;
+}

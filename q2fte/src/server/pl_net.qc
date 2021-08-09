@@ -107,17 +107,18 @@ void PL_Setup_Netsync()
 	}
 	
 	netsync_addelement(self, findentityfield("think_time"), 4096);
-	int i;
-	for(i = 0; i < 3; i++)
-	{
-		netsync_addelement(self, findentityfield(strcat("viewkick_origin[", itos(i), "]")), 4096);
-		netsync_addelement(self, findentityfield(strcat("viewkick_origin_l[", itos(i), "]")), 4096);
-		//netsync_addelement(self, findentityfield(strcat("viewkick_origin_g[", itos(i), "]")), 4096);
-		
-		netsync_addelement(self, findentityfield(strcat("viewkick_angles[", itos(i), "]")), 4096);
-		netsync_addelement(self, findentityfield(strcat("viewkick_angles_l[", itos(i), "]")), 4096);
-		//netsync_addelement(self, findentityfield(strcat("viewkick_angles_g[", itos(i), "]")), 4096);
-	}
+	netsync_addelement(self, findentityfield("viewkick_origin_x"), 4096);
+	netsync_addelement(self, findentityfield("viewkick_origin_y"), 4096);
+	netsync_addelement(self, findentityfield("viewkick_origin_z"), 4096);
+	netsync_addelement(self, findentityfield("viewkick_angles_x"), 4096);
+	netsync_addelement(self, findentityfield("viewkick_angles_y"), 4096);
+	netsync_addelement(self, findentityfield("viewkick_angles_z"), 4096);
+	netsync_addelement(self, findentityfield("viewkick_origin_l_x"), 4096);
+	netsync_addelement(self, findentityfield("viewkick_origin_l_y"), 4096);
+	netsync_addelement(self, findentityfield("viewkick_origin_l_z"), 4096);
+	netsync_addelement(self, findentityfield("viewkick_angles_l_x"), 4096);
+	netsync_addelement(self, findentityfield("viewkick_angles_l_y"), 4096);
+	netsync_addelement(self, findentityfield("viewkick_angles_l_z"), 4096);
 }
 
 

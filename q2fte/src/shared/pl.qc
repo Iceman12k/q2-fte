@@ -36,6 +36,13 @@ void PL_CheckThink(entity ent)
 	
 	ent.think_time = ent.client_time + PLAYER_THINKFPS;
 	
+	int i;
+	for(i = 0; i < 3; i++)
+	{
+		ent.viewkick_origin[i] = round(ent.viewkick_origin[i] * 100) / 100;
+		ent.viewkick_angles[i] = round(ent.viewkick_angles[i] * 100) / 100;
+	}
+	
 	ent.viewkick_origin_l = ent.viewkick_origin_g;
 	ent.viewkick_angles_l = ent.viewkick_angles_g;
 	ent.viewkick_origin_g = ent.viewkick_origin;

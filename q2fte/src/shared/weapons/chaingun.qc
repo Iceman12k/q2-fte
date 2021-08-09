@@ -39,8 +39,8 @@ void Chaingun_Frame(entity ent, float move_time)
 			int i;
 			for (i = 0; i < 3; i++)
 			{
-				ent.viewkick_origin[i] = crandom() * 0.35;
-				ent.viewkick_angles[i] = crandom() * 0.7;
+				ent.viewkick_origin[i] = PL_PRandom_C(ent.client_time + i) * 0.35;
+				ent.viewkick_angles[i] = PL_PRandom_C(ent.client_time + i) * 0.7;
 			}
 			
 			ent.ammo_inventory[AMMO_BULLETS]--;

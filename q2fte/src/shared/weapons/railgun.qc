@@ -26,6 +26,10 @@ void Railgun_Fire(entity ent)
 	
 	#ifdef SSQC
 	sound(ent, CHAN_WEAPON, "weapons/railgf1a", 1, ATTN_NORM);
+	
+	vector offset = ent.origin + (ent.view_ofs - '0 0 8');
+	traceline(offset, offset + 10240 * v_forward, MOVE_NORMAL, ent);
+	trailparticles(particleeffectnum("q2part.teq2_railtrail"), ent, trace_endpos, offset);
 	#endif
 	#ifdef CSQC
 	if (prediction_playeffects)
@@ -87,7 +91,7 @@ void Railgun_Init()
 	
 	animstate_t *anim = memalloc(sizeof(animstate_t));
 	wep->animations[WEP_ANIM_FIRE1] = anim;
-	Anim_AddFrame(&(anim->frame_list_head), &(anim->frame_list_tail), 3, 10, __NULL__, __NULL__);
+	Anim_AddFrame(&(anim->frame_list_head), &(anim->frame_list_tail), 3, 30, __NULL__, __NULL__);
 	Anim_AddFrame(&(anim->frame_list_head), &(anim->frame_list_tail), 4, 10, Railgun_Fire, __NULL__);
 	for(i = 5; i <= 18; i++)
 	{

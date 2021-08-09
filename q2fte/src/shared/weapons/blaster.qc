@@ -12,7 +12,8 @@ void Blaster_Frame(entity ent)
 		ent.attack_finished = ent.client_time + 0.5;
 		Weapon_StartAnimation(ent, WEP_ANIM_FIRE1);
 		
-		ent.viewkick_angles[0] -= 2;
+		ent.viewkick_origin[1] -= 2;
+		ent.viewkick_angles[0] -= 1;
 		
 		#ifdef SSQC
 		sound(ent, CHAN_WEAPON, "weapons/blastf1a", 1, ATTN_NORM);

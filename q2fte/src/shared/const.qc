@@ -1,5 +1,11 @@
 
 #define uint unsigned int
+#define PLAYER_VDMGTIME		0.5f
+#define PLAYER_THINKFPS 	0.1f
+#define PLAYER_PHYSFPS 		1/125
+
+#define HEALTH_IGNORE_MAX   1
+#define HEALTH_TIMED        2
 
 float phys_gravity = 820;
 float phys_friction = 6;
@@ -53,12 +59,12 @@ const int NPKT_GS_UPDATE	= 50;
 const int SPECFLAG_PLAYER	= 1;
 const int SPECFLAG_TEAMLOCK	= 2;
 
-
 const int MF_ONLADDER = 4;
 const int MF_CROUCHED = 8;
 const int MF_BLOCKCROUCH = 16;
 
 const float FL_JUMPRELEASED = 4096;
+const float FL_RESPAWN 		= 4096;
 const float	FL_FIRESPAWN	= 131072;
 const float FL_SHOOTRELEASED= 262144;
 
@@ -74,6 +80,14 @@ const int NLFL_LOCAL = 1;
 const int NLFL_SPECTATE = 2;
 const int NLFL_TEAM = 8;
 
+// item spawnflags
+#define ITEM_TRIGGER_SPAWN      0x00000001
+#define ITEM_NO_TOUCH           0x00000002
+// 6 bits reserved for editor flags
+// 8 bits used as power cube id bits for coop games
+#define DROPPED_ITEM            0x00010000
+#define DROPPED_PLAYER_ITEM     0x00020000
+#define ITEM_TARGETS_USED       0x00040000
 
 const vector PL_MINS_STAND = '-16 -16 -24';
 const vector PL_MAXS_STAND = '16 16 32';

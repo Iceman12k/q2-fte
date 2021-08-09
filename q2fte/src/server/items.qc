@@ -36,6 +36,130 @@ void IT_Generic_Respawn()
 }
 
 
+void IT_MegaHealth_Think()
+{
+    if (self.owner.health > self.owner.max_health) {
+        self.nextthink = time + 1;
+        self.owner.health -= 1;
+        return;
+    }
+
+    if (!(self.spawnflags & DROPPED_ITEM))
+	{
+		self.think = IT_Generic_Respawn;
+		self.nextthink = time + self.respawn_time;
+	}
+	else
+		remove(self);
+}
+
+void IT_HealthPickup_Touch()
+{
+	if (!(self.style & HEALTH_IGNORE_MAX))
+		if (other.health >= other.max_health)
+			return;
+
+    other.health += self.health;
+
+    if (!(self.style & HEALTH_IGNORE_MAX))
+	{
+		if (other.health > other.max_health)
+			other.health = other.max_health;
+    }
+
+	sound(other, CHAN_AUTO, self.noise, 1, ATTN_IDLE);
+	
+    if (self.style & HEALTH_TIMED)
+	{
+		self.think = IT_MegaHealth_Think;
+		self.nextthink = time + 5;
+		self.owner = other;
+		self.flags |= FL_RESPAWN;
+		
+		
+		self.solid = SOLID_NOT;
+		self.drawonlytoclient = self;
+    } 
+	else 
+	{
+		if (!(self.spawnflags & DROPPED_ITEM))
+		{
+			self.think = IT_Generic_Respawn;
+			self.nextthink = time + self.respawn_time;
+			
+			
+			self.solid = SOLID_NOT;
+			self.drawonlytoclient = self;
+		}
+    }
+}
+
+void IT_HealthPickup()
+{
+	precache_sound(self.noise);
+	precache_model(self.model);
+	setmodel(self, self.model);
+	setsize(self, '-15 -15 -15', '15 15 15');
+	
+	self.touch = IT_HealthPickup_Touch;
+	self.solid = SOLID_TRIGGER;
+}
+
+void spawnfunc_item_health()
+{
+	self.model = "models/items/healing/medium/tris";
+	self.noise = "items/n_health";
+	IT_HealthPickup();
+	
+	self.health = 10;
+	
+	if !(self.respawn_time)
+		self.respawn_time = RESPAWNTIME_HEALTH;
+}
+
+void spawnfunc_item_health_small()
+{
+	self.model = "models/items/healing/stimpack/tris";
+	self.noise = "items/s_health";
+	IT_HealthPickup();
+	
+	self.health = 2;
+	self.style = HEALTH_IGNORE_MAX;
+	
+	if !(self.respawn_time)
+		self.respawn_time = RESPAWNTIME_HEALTH;
+}
+
+void spawnfunc_item_health_large()
+{
+	self.model = "models/items/healing/large/tris";
+	self.noise = "items/l_health";
+	IT_HealthPickup();
+	
+	self.health = 25;
+	
+	if !(self.respawn_time)
+		self.respawn_time = RESPAWNTIME_HEALTH;
+}
+
+void spawnfunc_item_health_mega()
+{
+	self.model = "models/items/mega_h/tris";
+	self.noise = "items/m_health";
+	IT_HealthPickup();
+	
+	self.health = 100;
+	self.style = HEALTH_IGNORE_MAX | HEALTH_TIMED;
+	
+	if !(self.respawn_time)
+		self.respawn_time = 20;
+}
+
+
+
+
+
+
 void IT_ArmorPickup_Touch()
 {
 	if (self.armortype == 255)

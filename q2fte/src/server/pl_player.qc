@@ -9,30 +9,6 @@ void PL_SetSkin(entity ent, string mdl, string skin)
 	precache_model(ent.skin_model);
 }
 
-void PL_SendViewkick(entity ent, float start, float goal, float speed1, float speed2, optional int skip)
-{
-	ListElement_Entity *list = (ent.viewer_list)->head;
-	if (skip)
-	{
-		list = list->next;
-	}
-	
-	while (list != __NULL__)
-	{
-		WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
-		WriteByte(MSG_MULTICAST, NPKT_VIEWKICK);
-		WriteChar(MSG_MULTICAST, start * 4);
-		WriteChar(MSG_MULTICAST, goal * 4);
-		WriteByte(MSG_MULTICAST, speed1 / 2);
-		WriteByte(MSG_MULTICAST, speed2 / 2);
-		
-		msg_entity = list->el_ent;
-		multicast(ent.origin, MULTICAST_ONE_R);
-		
-		list = list->next;
-	}
-}
-
 void PlayerPreThink()
 {
 	self.ping = infokeyf(self, INFOKEY_P_PING);
@@ -43,7 +19,71 @@ void PlayerPostThink()
 	netsync_updateflags(self);
 };
 
+void PL_DamageFeedback(entity ent)
+{
+	vector vdmg_angles;
+	int count = (ent.damage_blood + ent.damage_armor + ent.damage_parmor);
+    if !(count)
+        return;
+	
+    int realcount = count;
+    count = max(10, count);
+	
+    ent.damage_alpha = count * 0.01;
+	ent.damage_alpha = bound(0.2, ent.damage_alpha, 0.6);
+	
+	vector damage_blend;
+    if (ent.damage_parmor)
+		damage_blend += ((float)ent.damage_parmor / realcount) * '0 1 0';
+    if (ent.damage_armor)
+		damage_blend += ((float)ent.damage_armor / realcount) * '1 1 1';
+    if (ent.damage_blood)
+		damage_blend += ((float)ent.damage_blood / realcount) * '0.8 0 0';
+	
+	
+	makevectors(ent.v_angle);
+	float kick = fabs(ent.damage_knockback);
+    if (kick && ent.health > 0) { // kick of 0 means no view adjust at all
+        kick = kick * 100 / ent.health;
 
+        if (kick < count * 0.5f)
+            kick = count * 0.5f;
+        if (kick > 50)
+            kick = 50;
+		
+		vector v = ent.damage_pos - ent.origin;
+		v = normalize(v);
+		
+        float side = v * v_right;
+        vdmg_angles[2] = kick * side * 0.3;
+
+        side = -(v * v_forward);
+        vdmg_angles[0] = kick * side * 0.3;
+    }
+	
+	
+	ListElement_Entity *list = (ent.viewer_list)->head;
+	while (list != __NULL__)
+	{
+		WriteByte(MSG_MULTICAST, SVC_CGAMEPACKET);
+		WriteByte(MSG_MULTICAST, NPKT_VIEWKICK);
+		WriteCoord(MSG_MULTICAST, vdmg_angles[0]); WriteCoord(MSG_MULTICAST, vdmg_angles[2]);
+		WriteShort(MSG_MULTICAST, damage_blend[0] * 100); WriteShort(MSG_MULTICAST, damage_blend[1] * 100); WriteShort(MSG_MULTICAST, damage_blend[2] * 100);
+		WriteByte(MSG_MULTICAST, ent.damage_alpha * 100);
+		
+		msg_entity = list->el_ent;
+		multicast(ent.origin, MULTICAST_ONE_R);
+		
+		list = list->next;
+	}
+	
+	ent.damage_parmor = 0;
+	ent.damage_armor = 0;
+	ent.damage_blood = 0;
+	ent.damage_knockback = 0;
+	ent.damage_alpha = 0;
+	ent.damage_pos = 0;
+}
 
 //called when a client connects to the server
 void ClientConnect(optional float csqcactive)
@@ -96,6 +136,8 @@ void PlayerSpawn()
 	
 	self.armorvalue = 0;
 	self.armortype = 0;
+	
+	self.mass = 200;
 	
 	self.max_health = 100;
 	self.health = self.max_health;
@@ -150,6 +192,9 @@ void PutClientInServer()
 void ClientKill()
 {
 	self.frags--;
+	
+	self.health = 0;
+	PL_Death(self.origin, self, self, 0);
 	
 	if (time > self.damage_time + 2)
 		self.damage_from = self;

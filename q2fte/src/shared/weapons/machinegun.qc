@@ -48,6 +48,17 @@ void Machinegun_Frame(entity ent)
 			ent.viewkick_angles[i] = PL_PRandom_C(ent.client_time + i + 4) * 0.7;
 		}
 		ent.viewkick_origin[0] = PL_PRandom_C(ent.client_time - 1) * 0.35;
+		
+		
+		#ifdef SSQC
+		makevectors(ent.v_angle + ent.viewkick_angles);
+		vector aim = v_forward;
+		aim *= 8192;
+		aim += v_right * crandom() * DEFAULT_BULLET_HSPREAD;
+		aim += v_up * crandom() * DEFAULT_BULLET_VSPREAD;
+		trace_t shot;
+		CB_Hitscan_Attack(&shot, ent, aim, 8, 2, 0, EFFECT_IMPACT_WALL);
+		#endif
 	}
 }
 

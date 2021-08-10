@@ -10,6 +10,17 @@
 .float 		client_time;
 .float		land_time;
 .float		footstep_time;
+.float		takedamage;
+
+.float		armortype;
+.float		armorvalue;
+
+.int		damage_parmor;
+.int		damage_armor;
+.int		damage_blood;
+.int		damage_knockback;
+.float		damage_alpha;
+.vector		damage_pos;
 
 .float		impulse;
 .float		flags;
@@ -17,6 +28,7 @@
 .float		items;
 .float		team;
 .float		weapon;
+.float		mass;
 
 .int		spectating;
 

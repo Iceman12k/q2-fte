@@ -8,6 +8,8 @@ fteextensions.qc
 gamedefs.qc
 ../shared/player_defs.qc
 
+combat.qc
+
 ../shared/anim_defs.qc
 ../shared/weapons/weapon_defs.qc
 ../shared/weapons/blaster.qc

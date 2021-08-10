@@ -31,6 +31,20 @@ void Shotgun_Frame(entity ent)
 		
 		ent.viewkick_origin[1] = -2;
 		ent.viewkick_angles[0] = -2;
+		
+		#ifdef SSQC
+		makevectors(ent.v_angle);
+		int k;
+		for(k = 0; k < 12; k++)
+		{
+			vector aim = v_forward;
+			aim *= 8192;
+			aim += v_right * crandom() * 500;
+			aim += v_up * crandom() * 500;
+			trace_t shot;
+			CB_Hitscan_Attack(&shot, ent, aim, 4, 8, 0, EFFECT_IMPACT_SHOTGUN);
+		}
+		#endif
 	}
 }
 

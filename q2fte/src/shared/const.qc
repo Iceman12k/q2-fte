@@ -1,11 +1,29 @@
 
 #define uint unsigned int
 #define PLAYER_VDMGTIME		0.5f
+#define PLAYER_VFALLTIME	0.3f
 #define PLAYER_THINKFPS 	0.1f
 #define PLAYER_PHYSFPS 		1/125
 
 #define HEALTH_IGNORE_MAX   1
 #define HEALTH_TIMED        2
+
+#define DEFAULT_BULLET_HSPREAD  300
+#define DEFAULT_BULLET_VSPREAD  500
+#define DEFAULT_SHOTGUN_HSPREAD 1000
+#define DEFAULT_SHOTGUN_VSPREAD 500
+
+#define DFL_PENETRATE		1
+#define DFL_ENERGY			2
+#define DFL_NOKNOCKBACK		4
+#define DFL_NOARMOR			8
+
+float ARMOR_MAXIMUM[3];
+float ARMOR_PROTECTION[3];
+float ARMOR_ENERGY[3];
+const int ARMOR_RED		= 2;
+const int ARMOR_YELLOW	= 1;
+const int ARMOR_GREEN	= 0;
 
 float phys_gravity = 820;
 float phys_friction = 6;
@@ -13,6 +31,7 @@ float phys_waterfriction = 1;
 float phys_flyfriction = 9;
 
 int EFFECT_IMPACT_WALL;
+int	EFFECT_IMPACT_SHOTGUN;
 int EFFECT_IMPACT_BLOOD;
 
 .int moveflags;
@@ -46,7 +65,8 @@ const int DEAD_DEAD	= 1;
 const int DMG_TAKE_NOT		= 0;
 const int DMG_TAKE_PLAYER	= 1;
 const int DMG_TAKE_PROP		= 2;
-const int DMG_TAKE_IGNORE	= 3;
+const int DMG_TAKE_CORPSE	= 3;
+const int DMG_TAKE_IGNORE	= 5;
 
 const int NENT_PLAYER 	= 1;
 const int NENT_SPEC 	= 2;

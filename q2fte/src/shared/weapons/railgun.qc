@@ -27,9 +27,15 @@ void Railgun_Fire(entity ent)
 	#ifdef SSQC
 	sound(ent, CHAN_WEAPON, "weapons/railgf1a", 1, ATTN_NORM);
 	
-	vector offset = ent.origin + (ent.view_ofs - '0 0 8');
-	traceline(offset, offset + 10240 * v_forward, MOVE_NORMAL, ent);
-	trailparticles(particleeffectnum("q2part.teq2_railtrail"), ent, trace_endpos, offset);
+	
+	makevectors(ent.v_angle + ent.viewkick_angles);
+	vector aim = v_forward;
+	aim *= 10240;
+	trace_t shot;
+	CB_Hitscan_Attack(&shot, ent, aim, 100, 200, DFL_PENETRATE, 0);
+	trailparticles(particleeffectnum("q2part.teq2_railtrail"), ent, shot->endpos, PL_GetBarrelPos(ent));
+	
+	
 	#endif
 	#ifdef CSQC
 	if (prediction_playeffects)

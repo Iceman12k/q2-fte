@@ -7,6 +7,7 @@ void BFG_Frame(entity ent)
 	if (ent.client_time < ent.attack_finished)
 		return;
 	
+	
 	if (input_buttons & BUTTON_FIRE)
 	{
 		if (ent.ammo_inventory[AMMO_CELLS] < (WeaponList[WEP_BFG10K])->ammo_min)

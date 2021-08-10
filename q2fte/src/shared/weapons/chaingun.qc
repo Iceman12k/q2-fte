@@ -43,6 +43,16 @@ void Chaingun_Frame(entity ent, float move_time)
 				ent.viewkick_angles[i] = PL_PRandom_C(ent.client_time + i) * 0.7;
 			}
 			
+			#ifdef SSQC
+			makevectors(ent.v_angle + ent.viewkick_angles);
+			vector aim = v_forward;
+			aim *= 8192;
+			aim += v_right * crandom() * DEFAULT_BULLET_HSPREAD;
+			aim += v_up * crandom() * DEFAULT_BULLET_VSPREAD;
+			trace_t shot;
+			CB_Hitscan_Attack(&shot, ent, aim, 6, 2, 0, EFFECT_IMPACT_WALL);
+			#endif
+			
 			ent.ammo_inventory[AMMO_BULLETS]--;
 		}
 	}
@@ -55,8 +65,8 @@ void Chaingun_Frame(entity ent, float move_time)
 		if (input_buttons & BUTTON_FIRE)
 		{
 			#ifdef SSQC
-			sound(ent, CHAN_ITEM, "weapons/chngnl1a", 0.7, ATTN_IDLE);
-			sound(ent, CHAN_WEAPON, "weapons/chngnu1a", 1, ATTN_IDLE);
+			sound(ent, CHAN_ITEM, "weapons/chngnl1a", 0.7, ATTN_IDLE, 0, SOUNDFLAG_FOLLOW);
+			sound(ent, CHAN_WEAPON, "weapons/chngnu1a", 1, ATTN_IDLE, 0, SOUNDFLAG_FOLLOW);
 			#endif
 			#ifdef CSQC
 			if (prediction_playeffects)
@@ -91,7 +101,7 @@ void Chaingun_Spin(entity ent)
 			Weapon_StartAnimation(ent, WEP_ANIM_FIRE2);
 		
 		#ifdef SSQC
-		sound(ent, CHAN_ITEM, "weapons/chngnl1a", 0.7, ATTN_IDLE);
+		sound(ent, CHAN_ITEM, "weapons/chngnl1a", 0.7, ATTN_IDLE, 0, SOUNDFLAG_FOLLOW);
 		#endif
 		
 		ent.attack_finished = ent.client_time + 1;
@@ -100,7 +110,7 @@ void Chaingun_Spin(entity ent)
 	{
 		#ifdef SSQC
 		if (ent.wep_animation == WEP_ANIM_FIRE2)
-			sound(ent, CHAN_ITEM, "weapons/chngnd1a", 1, ATTN_IDLE);
+			sound(ent, CHAN_ITEM, "weapons/chngnd1a", 1, ATTN_IDLE, 0, SOUNDFLAG_FOLLOW);
 		#endif
 		
 		Weapon_StartAnimation(ent, WEP_ANIM_FIRE3);

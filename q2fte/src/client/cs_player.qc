@@ -99,6 +99,9 @@ void PL_Pred_UpdateState(CLIENT_STATE *state)
 	state->flags = self.flags;
 	state->moveflags = self.moveflags;
 	
+	state->deadflags = self.deadflags;
+	state->health = self.health;
+	
 	state->think_time = self.think_time;
 	state->viewkick_origin = self.viewkick_origin;
 	state->viewkick_origin_l = self.viewkick_origin_l;
@@ -142,6 +145,7 @@ void PL_Pred_Restore(CLIENT_STATE *state)
 	self.flags = state->flags;
 	self.moveflags = state->moveflags;
 	
+	self.deadflags = state->deadflags;
 	self.health = state->health;
 	
 	self.think_time = state->think_time;
@@ -355,6 +359,14 @@ float PL_LocalThink()
 	
 	vector view_origin = self.origin;
 	vector v_angles = view_angles;
+	if (self.deadflags == DEAD_DEAD)
+	{
+		v_angles = last_alive_angle;
+		view_angles = last_alive_angle;
+		
+		v_angles[2] = 30;
+	}
+	
 	makevectors(view_angles);
 	
 	int i;
@@ -365,17 +377,33 @@ float PL_LocalThink()
 		
 		float amt = (self.vdmg_time - cltime) / 0.5;
 		amt = bound(0, amt, 1);
+		self.vdmg_angles_last = self.vdmg_angles_current;
+		self.vdmg_angles_current = self.vdmg_angles * (amt);
 		
-		self.vdmg_last = self.vdmg_current;
-		self.vdmg_current = self.vdmg_angles * (amt);
+		self.vdmg_alpha_last = self.vdmg_alpha_current;
+		self.vdmg_alpha_current = self.vdmg_alpha * (amt);
+		
+		self.vdmg_blend_last = self.vdmg_blend_current;
+		self.vdmg_blend_current = self.vdmg_blend * (amt);
+		
+		
+		
+		
+		float amt = (self.vfall_time - cltime) / 0.3;
+		amt = bound(0, amt, 1);
+		self.vfall_last = self.vfall_current;
+		self.vfall_current = self.vfall_angles * (amt);
 	}
 	
 	frac = (self.vdmg_lerptime - cltime) / 0.1;
 	for(i = 0; i < 3; i++)
 	{
-		v_angles[i] += lerp(self.vdmg_current[i], self.vdmg_last[i], frac);
+		v_angles[i] += lerp(self.vdmg_angles_current[i], self.vdmg_angles_last[i], frac);
+		//self.vdmg_blend_draw = lerp(self.vdmg_blend_current[i], self.vdmg_blend_last[i], frac);
 	}
-	
+	self.vdmg_alpha_draw = lerp(self.vdmg_alpha_current, self.vdmg_alpha_last, frac);
+	v_angles[0] += lerp(self.vfall_current[0], self.vfall_last[0], frac);
+	view_origin[2] -= lerp(self.vfall_current[0], self.vfall_last[0], frac) * 0.4;
 	
 	
 	
@@ -387,14 +415,7 @@ float PL_LocalThink()
 	
 	view_origin += lerp(self.viewkick_origin_g[0], self.viewkick_origin_l[0], frac) * v_right;
 	view_origin += lerp(self.viewkick_origin_g[1], self.viewkick_origin_l[1], frac) * v_forward;
-	view_origin += lerp(self.viewkick_origin_g[2], self.viewkick_origin_l[2], frac) * v_up;
-	
-	
-	if (self.deadflags == DEAD_DEAD)
-	{
-		v_angles = last_alive_angle;
-		view_angles = last_alive_angle;
-	}
+	view_origin[2] += lerp(self.viewkick_origin_g[2], self.viewkick_origin_l[2], frac);
 	
 	view_origin += self.origin_errorcorrect;
 	view_origin += self.view_ofs;
@@ -556,7 +577,7 @@ float PL_Predraw()
 	}
 	
 	
-	if (self == player_localentity)
+	if (self == player_localentity && self.deadflags == DEAD_NOT)
 	{
 		if (self.weapon_current != __NULL__)
 		{
@@ -651,6 +672,7 @@ void EntUpdate_Player(float isnew)
 		self.customphysics = PL_CustomPhysics;
 		self.friction = 1;
 		self.gravity = 1;
+		self.mass = 200;
 		setsize(self, '-16 -16 -24', '16 16 32');
 		self.alpha = 1;
 		
@@ -791,6 +813,15 @@ void EntUpdate_Player(float isnew)
 			}
 		}
 		
+		if (sendflags & 512)
+		{
+			self.deadflags = ReadByte();
+			self.health = ReadShort();
+			
+			(self.server_state)->deadflags = self.deadflags;
+			(self.server_state)->health = self.health;
+		}
+		
 		if (sendflags & 4096)
 		{
 			self.think_time = ReadFloat();
@@ -809,6 +840,31 @@ void EntUpdate_Player(float isnew)
 			(self.server_state)->viewkick_angles = self.viewkick_angles;
 			(self.server_state)->viewkick_angles_l = self.viewkick_angles_l;
 			(self.server_state)->viewkick_angles_g = self.viewkick_angles_g;
+		}
+	}
+	else
+	{
+		if (sendflags & 8)
+		{
+			self.movetype = ReadByte();
+			self.moveflags = ReadByte();
+			self.flags = ReadLong();
+			
+			(self.server_state)->movetype = self.movetype;
+			(self.server_state)->moveflags = self.moveflags;
+			(self.server_state)->flags = self.flags;
+		}
+		
+		if (sendflags & 64)
+		{
+			self.weapon = ReadByte();
+			(self.server_state)->weapon = self.weapon;
+		}
+		
+		if (sendflags & 512)
+		{
+			self.deadflags = ReadByte();
+			(self.server_state)->deadflags = self.deadflags;
 		}
 	}
 	

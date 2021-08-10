@@ -14,11 +14,24 @@ float	cmd_forceimpulse;
 .float	lerp_stepsize;
 .float	skin_shader;
 
-.vector	vdmg_angles;
-.vector	vdmg_last;
-.vector	vdmg_current;
 .float	vdmg_time;
 .float	vdmg_lerptime;
+.vector	vdmg_angles;
+.vector	vdmg_angles_last;
+.vector	vdmg_angles_current;
+.vector	vdmg_blend;
+.vector	vdmg_blend_last;
+.vector	vdmg_blend_current;
+.vector vdmg_blend_draw;
+.float	vdmg_alpha;
+.float	vdmg_alpha_last;
+.float	vdmg_alpha_current;
+.float	vdmg_alpha_draw;
+
+.float	vfall_time;
+.vector	vfall_angles;
+.vector	vfall_last;
+.vector	vfall_current;
 
 const int FONT_HUD = 1;
 

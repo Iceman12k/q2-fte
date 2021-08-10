@@ -102,22 +102,25 @@ void Anim_Simulate(entity ent, float move_time, animstate_t **anim, animframe_t 
 		}
 		
 		///*
-		if ((oldframe)->func != __NULL__)
+		if ((oldframe) != __NULL__)
 		{
-			(oldframe)->func(ent);
-		}
-		
-		if ((oldframe)->sample != __NULL__)
-		{
-			#ifdef SSQC
-			sound(ent, CHAN_WEAPON, (oldframe)->sample, 1, ATTN_NORM);
-			#endif
-			#ifdef CSQC
-			if (prediction_playeffects)
+			if ((oldframe)->func != __NULL__)
 			{
-				localsound((oldframe)->sample, CHAN_WEAPON, 1);
+				(oldframe)->func(ent);
 			}
-			#endif
+			
+			if ((oldframe)->sample != __NULL__)
+			{
+				#ifdef SSQC
+				sound(ent, CHAN_WEAPON, (oldframe)->sample, 1, ATTN_NORM, 0, SOUNDFLAG_FOLLOW);
+				#endif
+				#ifdef CSQC
+				if (prediction_playeffects)
+				{
+					localsound((oldframe)->sample, CHAN_WEAPON, 1);
+				}
+				#endif
+			}
 		}
 		//*/
 	}

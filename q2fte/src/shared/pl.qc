@@ -1,7 +1,110 @@
 #ifdef SSQC
-void PL_SendViewkick(entity ent, float start, float goal, float speed1, float speed2);
 void PlayerRespawn();
+void PL_DamageFeedback(entity ent);
 #endif
+
+vector PL_GetBarrelPos(entity ent)
+{
+	return ent.origin + (ent.view_ofs - '0 0 8') + ent.sview_height;
+}
+
+int PL_ArmorSave(vector pos, entity targ, entity attacker, float damage, int dflags)
+{
+	int save;
+	if (dflags & DFL_NOARMOR)
+		return 0;
+	
+	if (dflags & DFL_ENERGY)
+		save = ceil(ARMOR_ENERGY[targ.armortype] * damage);
+	else
+		save = ceil(ARMOR_PROTECTION[targ.armortype] * damage);
+	
+	if (save >= targ.armorvalue)
+        save = targ.armorvalue;
+	
+	if !(save)
+		return 0;
+	
+	targ.armorvalue -= save;
+	return save;
+}
+
+void PL_Death(vector pos, entity ent, entity attacker, int dmg)
+{
+	#ifdef CSQC
+	return;
+	#endif
+	
+	if (ent == attacker || attacker == world)
+	{
+		ent.frags--;
+	}
+	else
+	{
+		attacker.frags++;
+	}
+	
+	ent.weapon = 0;
+	ent.weapon_wanted = 0;
+	ent.think_time = ent.client_time + 0.25;
+	ent.attack_finished = ent.client_time + 5;
+	ent.deadangle = ent.v_angle;
+	ent.solid = SOLID_NOT;
+	ent.deadflags = DEAD_DEAD;
+	ent.takedamage = DMG_TAKE_CORPSE;
+}
+
+void PL_TakeDamage(vector pos, entity targ, entity inflictor, entity attacker, int damage, int knockback, int dflags, int mod)
+{
+	int save;
+	int asave;
+	int psave;
+	int take = damage;
+	
+	vector dir = normalize(targ.origin - inflictor.origin);
+	
+    if (!(dflags & DFL_NOKNOCKBACK)) {
+        if ((knockback) && (targ.movetype != MOVETYPE_NONE) && (targ.movetype != MOVETYPE_BOUNCE) && (targ.movetype != MOVETYPE_PUSH)) {
+            vector	kvel;
+            float   kmass;
+			
+            if (targ.mass < 50)
+                kmass = 50;
+            else
+                kmass = targ.mass;
+
+            if (attacker == targ)
+                kvel = dir * 1600 * (float)knockback / kmass;
+            else
+				kvel = dir * 500 * (float)knockback / kmass;
+			
+			targ.velocity += kvel;
+        }
+    }
+	
+	asave = PL_ArmorSave(pos, targ, attacker, damage, dflags);
+	take -= asave;
+	
+	asave += save;
+	
+	
+    if (take) {
+        targ.health -= (float)take;
+		
+        if (targ.health <= 0) {
+            PL_Death(pos, targ, attacker, take);
+            return;
+        }
+    }
+	
+	targ.damage_parmor += psave;
+	targ.damage_armor += asave;
+	targ.damage_blood += take;
+	targ.damage_knockback += knockback;
+	targ.damage_pos = pos;
+}
+
+
 
 void PL_SetSize(entity ent)
 {
@@ -145,6 +248,15 @@ void PL_FallingDamage(entity ent)
 	
 	if (delta > 30 && ent.deadflags == DEAD_NOT)
 	{
+		#ifdef CSQC
+		if (prediction_playeffects)
+		{
+			ent.vfall_angles[0] = delta * 0.5f;
+			if (ent.vfall_angles[0] > 40)
+				ent.vfall_angles[0] = 40;
+			ent.vfall_time = cltime + PLAYER_VFALLTIME;
+		}
+		#endif
 		
 		float damage = (delta - 30) / 2;
         if (damage < 1)
@@ -161,18 +273,12 @@ void PL_FallingDamage(entity ent)
 		}
 		#endif
 		
-		
-		float severity = bound(0.8, damage / 60, 1.25);
-		#ifdef SSQC
-		PL_SendViewkick(ent, -8 * severity, 13 * severity, 150 + (20 * severity), 190 + (20 * severity));
-		#endif
+		PL_TakeDamage(ent.origin - [0, 0, ent.mins_z], ent, ent, ent, damage, 0, 0, 0);
 	}
 	else if (delta > 22)
 	{
 		#ifdef SSQC
 		sound(ent, CHAN_AUTO, "player/land1", 1, ATTN_VOICE);
-		
-		PL_SendViewkick(ent, -3, 8, 150, 190);
 		#endif
 	}
 }
@@ -243,6 +349,13 @@ void PL_RunPhysics()
 	}
 	#endif
 	
+	if (self.flags & FL_FIRESPAWN)
+	{
+		if (input_buttons & BUTTON_FIRE)
+			input_buttons -= (input_buttons & BUTTON_FIRE);
+		else
+			self.flags -= (self.flags & FL_FIRESPAWN);
+	}
 	
 	local float tm = input_timelength;
 	local float timestep = PLAYER_PHYSFPS; //we always want at least 125 fps
@@ -280,7 +393,7 @@ void PL_RunPhysics()
 			//self.v_angle = self.deadangle;
 			#endif
 			
-			if (self.client_time >= self.attack_finished)
+			if (self.client_time >= self.think_time)
 			{
 				if (((input_buttons & BUTTON_FIRE) && !(self.input_lastbuttons & BUTTON_FIRE)) || self.client_time >= self.attack_finished)
 				{
@@ -291,9 +404,10 @@ void PL_RunPhysics()
 			}
 			
 			self.input_lastbuttons = input_buttons;
-			
-			return;
+			tm -= timestep;
+			continue;
 		}
+		
 		
 		switch(self.movetype)
 		{
@@ -337,6 +451,10 @@ void PL_RunPhysics()
 		tm -= timestep;
 		setorigin(self, self.origin);
 	}
+	
+	#ifdef SSQC
+	PL_DamageFeedback(self);
+	#endif
 }
 
 

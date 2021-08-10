@@ -73,6 +73,10 @@ void W_Init()
 	Hyperblaster_Init();
 	Railgun_Init();
 	BFG_Init();
+	
+	EFFECT_IMPACT_SHOTGUN = particleeffectnum("q2part.teq2_shotgun");
+	EFFECT_IMPACT_WALL = particleeffectnum("q2part.teq2_gunshot");
+	EFFECT_IMPACT_BLOOD = particleeffectnum("q2part.teq2_blood");
 }
 
 

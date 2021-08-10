@@ -63,7 +63,7 @@ void CSQC_Parse_Event()
 	
 	switch (msg_type)
 	{
-		
+		case NPKT_VIEWKICK: NetRead_ViewKick();
 	}
 	
 }
@@ -207,6 +207,8 @@ void CSQC_UpdateView(float vwidth, float vheight, float notmenu)
 	setproperty(VF_AFOV, view_fov);
 	setproperty(VF_DRAWCROSSHAIR, TRUE);
 	renderscene();
+	
+	drawfill('0 0', scrsz, player_localentity.vdmg_blend_draw, player_localentity.vdmg_alpha_draw);
 	
 	HUD_Render();
 }

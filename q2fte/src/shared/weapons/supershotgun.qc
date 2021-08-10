@@ -31,6 +31,31 @@ void SuperShotgun_Frame(entity ent)
 		
 		ent.viewkick_origin[1] = -2;
 		ent.viewkick_angles[0] = -2;
+		
+		#ifdef SSQC
+		int k;
+		makevectors(ent.v_angle - '0 5 0');
+		for(k = 0; k < 10; k++)
+		{
+			vector aim = v_forward;
+			aim *= 8192;
+			aim += v_right * crandom() * 1000;
+			aim += v_up * crandom() * 500;
+			trace_t shot;
+			CB_Hitscan_Attack(&shot, ent, aim, 6, 12, 0, EFFECT_IMPACT_SHOTGUN);
+		}
+		
+		makevectors(ent.v_angle + '0 5 0');
+		for(k = 0; k < 10; k++)
+		{
+			vector aim = v_forward;
+			aim *= 8192;
+			aim += v_right * crandom() * 1000;
+			aim += v_up * crandom() * 500;
+			trace_t shot;
+			CB_Hitscan_Attack(&shot, ent, aim, 6, 12, 0, EFFECT_IMPACT_SHOTGUN);
+		}
+		#endif
 	}
 }
 

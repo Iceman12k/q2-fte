@@ -90,6 +90,8 @@ void PL_Setup_Netsync()
 	
 	netsync_addelement(self, findentityfield("sview_height"), 32);
 	
+	netsync_addelement(self, findentityfield("weapon"), 64);
+	netsync_addelement(self, findentityfield("weapon_wanted"), 64);
 	netsync_addelement(self, findentityfield("wep_framenum"), 64);
 	netsync_addelement(self, findentityfield("wep_animation"), 64);
 	netsync_addelement(self, findentityfield("wep_firemode"), 64);
@@ -105,6 +107,9 @@ void PL_Setup_Netsync()
 	{
 		netsync_addelement(self, findentityfield(strcat("weapon_inventory[", itos(i), "]")), 256);
 	}
+	
+	netsync_addelement(self, findentityfield("health"), 512);
+	netsync_addelement(self, findentityfield("deadflags"), 512);
 	
 	netsync_addelement(self, findentityfield("think_time"), 4096);
 	netsync_addelement(self, findentityfield("viewkick_origin_x"), 4096);
@@ -283,6 +288,12 @@ float PL_SendEntity(entity to, float sendflags)
 			}
 		}
 		
+		if (sendflags & 512)
+		{
+			WriteByte(MSG_ENTITY, self.deadflags);
+			WriteShort(MSG_ENTITY, self.health);
+		}
+		
 		if (sendflags & 4096)
 		{
 			WriteFloat(MSG_ENTITY, self.think_time);
@@ -294,6 +305,25 @@ float PL_SendEntity(entity to, float sendflags)
 			WriteShort(MSG_ENTITY, self.viewkick_angles_x * 100); WriteShort(MSG_ENTITY, self.viewkick_angles_y * 100); WriteShort(MSG_ENTITY, self.viewkick_angles_z * 100);
 			WriteShort(MSG_ENTITY, self.viewkick_angles_l_x * 100); WriteShort(MSG_ENTITY, self.viewkick_angles_l_y * 100); WriteShort(MSG_ENTITY, self.viewkick_angles_l_z * 100);
 			WriteShort(MSG_ENTITY, self.viewkick_angles_g_x * 100); WriteShort(MSG_ENTITY, self.viewkick_angles_g_y * 100); WriteShort(MSG_ENTITY, self.viewkick_angles_g_z * 100);
+		}
+	}
+	else
+	{
+		if (sendflags & 8)
+		{
+			WriteByte(MSG_ENTITY, self.movetype);
+			WriteByte(MSG_ENTITY, self.moveflags);
+			WriteLong(MSG_ENTITY, self.flags);
+		}
+		
+		if (sendflags & 64)
+		{
+			WriteByte(MSG_ENTITY, self.weapon);
+		}
+		
+		if (sendflags & 512)
+		{
+			WriteByte(MSG_ENTITY, self.deadflags);
 		}
 	}
 	

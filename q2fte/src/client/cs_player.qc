@@ -8,8 +8,6 @@ struct CLIENT_STATE {
 	int 	saved_frame;
 	int 	current_frame;
 	
-	
-	
 	float 	impulse;
 	
 	float 	client_time;
@@ -34,6 +32,7 @@ struct CLIENT_STATE {
 	vector 	origin;
 	vector 	velocity;
 	vector	v_angle;
+	vector	angles;
 	
 	float 	flags;
 	int		moveflags;
@@ -407,7 +406,7 @@ float PL_LocalThink()
 	
 	
 	
-	frac = (self.think_time - self.client_time) / 0.1;
+	frac = bound(0, (self.think_time - self.client_time) / 0.1, 1.1);
 	for(i = 0; i < 3; i++)
 	{
 		v_angles[i] += lerp(self.viewkick_angles_g[i], self.viewkick_angles_l[i], frac);

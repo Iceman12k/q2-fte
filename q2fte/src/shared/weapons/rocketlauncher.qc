@@ -1,5 +1,60 @@
 
 
+#ifdef SSQC
+void Rocket_Touch()
+{
+	if (other.takedamage == DMG_TAKE_PLAYER)
+	{
+		PL_TakeDamage(self.origin, other, self, self.owner, 110, 140, 0, 0);
+	}
+	
+	CB_RadiusDamage(self, self.owner, self.origin, 120, 120, 160, 0, other);
+	
+	self.origin += trace_plane_normal * 8;
+	pointparticles(EFFECT_EXPLOSION_ROCKET, self.origin);
+	
+	sound(self, CHAN_VOICE, "", 1, ATTN_IDLE);
+	remove(self);
+}
+
+void Rocket_Physics()
+{
+	traceline(self.origin, self.origin + self.velocity * frametime, MOVE_NORMAL, self);
+	self.origin = trace_endpos;
+	
+	if (trace_fraction < 1)
+	{
+		entity oself = self;
+		self = trace_ent;
+		other = oself;
+		if (self.touch)
+			self.touch();
+		
+		self = oself;
+		other = trace_ent;
+		if (self.touch)
+			self.touch();
+		
+		self = oself;
+	}
+}
+
+entity Rocket_Fire()
+{
+	entity mis = spawn();
+	setmodel(mis, "models/objects/rocket/tris");
+	setsize(mis, '0 0 0', '0 0 0');
+	mis.solid = SOLID_BBOX;
+	mis.modelflags = MF_ROCKET;
+	mis.customphysics = Rocket_Physics;
+	mis.touch = Rocket_Touch;
+	mis.SendEntity = Proj_SendEntity;
+	mis.noise = "weapons/rockfly";
+	
+	//sound(mis, CHAN_VOICE, "weapons/rockfly", 1, ATTN_IDLE, 100, SOUNDFLAG_FOLLOW, 0);
+	return mis;
+}
+#endif
 
 
 void RocketLauncher_Frame(entity ent)
@@ -21,6 +76,14 @@ void RocketLauncher_Frame(entity ent)
 		
 		#ifdef SSQC
 		sound(ent, CHAN_WEAPON, "weapons/rocklf1a", 1, ATTN_NORM);
+		
+		makevectors(ent.v_angle);
+		entity mis = Rocket_Fire();
+		mis.owner = self;
+		mis.velocity = v_forward * 650;
+		mis.angles = [-ent.v_angle_x, ent.v_angle_y, ent.v_angle_z];
+		setorigin(mis, PL_GetBarrelPos(ent) + (v_forward * 8));
+		
 		#endif
 		#ifdef CSQC
 		if (prediction_playeffects)
@@ -51,6 +114,9 @@ void RocketLauncher_Init()
 	wep->ammo_pool = AMMO_ROCKETS;
 	wep->ammo_warn = 5;
 	wep->ammo_min = 1;
+	
+	precache_model("models/objects/rocket/tris");
+	precache_sound("weapons/rockfly");
 	
 	
 	animstate_t *anim = memalloc(sizeof(animstate_t));

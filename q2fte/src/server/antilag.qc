@@ -184,7 +184,7 @@ void antilag_move_all(antilag_t *ignore, float goal_time)
 		list->frame_hold = list->owner.frame;
 		list->moveflags_hold = list->owner.moveflags;
 		
-		if (list != ignore)
+		if (list != ignore && list->owner.deadflags != DEAD_DEAD)
 		{
 			antilag_move(list, goal_time);
 		}
@@ -198,7 +198,8 @@ void antilag_unmove_all()
 	antilag_t *list = antilag_list;
 	while (list != __NULL__)
 	{
-		antilag_unmove(list);
+		if ((list->owner).deadflags != DEAD_DEAD)
+			antilag_unmove(list);
 		
 		list = list->next;
 	}

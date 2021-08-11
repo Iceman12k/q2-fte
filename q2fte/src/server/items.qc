@@ -51,6 +51,9 @@ void IT_MegaHealth_Think()
 
 void IT_HealthPickup_Touch()
 {
+	if (other.classname != "player")
+		return;
+	
 	if (!(self.style & HEALTH_IGNORE_MAX))
 		if (other.health >= other.max_health)
 			return;
@@ -160,6 +163,9 @@ void spawnfunc_item_health_mega()
 
 void IT_ArmorPickup_Touch()
 {
+	if (other.classname != "player")
+		return;
+	
 	if (self.armortype == 255)
 	{
 		other.armorvalue += self.armorvalue;
@@ -278,6 +284,9 @@ void spawnfunc_item_armor_body()
 
 void IT_WeaponPickup_Touch()
 {
+	if (other.classname != "player")
+		return;
+	
 	int pickedup = FALSE;
 	
 	int i;

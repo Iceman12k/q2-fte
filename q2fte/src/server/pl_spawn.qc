@@ -69,7 +69,7 @@ void spawnpoint_start()
 
 void info_player_start()
 {
-	spawnpoint_start();
+	//spawnpoint_start();
 };
 
 void info_player_deathmatch()

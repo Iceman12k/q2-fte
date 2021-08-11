@@ -45,6 +45,19 @@ void Hyperblaster_Fire(entity ent)
 		
 		#ifdef SSQC
 		sound(ent, CHAN_WEAPON, "weapons/hyprbf1a", 1, ATTN_NORM);
+		
+		
+		makevectors(ent.v_angle);
+		entity mis = Plasma_Fire();
+		mis.owner = self;
+		mis.velocity = v_forward * 1000;
+		mis.angles = [-ent.v_angle_x, ent.v_angle_y, ent.v_angle_z];
+		if (ent.wep_firemode == 1)
+			mis.modelflags = MF_TRACER2;
+		else
+			mis.modelflags = 0;
+		setorigin(mis, PL_GetBarrelPos(ent) + (v_forward * 8) + (v_up * ent.wep_firemode));
+		
 		#endif
 		#ifdef CSQC
 		if (prediction_playeffects)

@@ -173,6 +173,7 @@ void PlayerSpawn()
 	
 	self.flags = FL_CLIENT | FL_FIRESPAWN;
 	self.moveflags = 0;
+	self.items = 0;
 	
 	self.angles = self.spawnpoint.angles;
 	self.fixangle = TRUE;
@@ -190,14 +191,14 @@ void PlayerSpawn()
 	self.weapon_inventory[WEP_HANDGRENADE] = 1;
 	
 	/*
-	self.weapon = WEP_BFG10K;
-	self.weapon_wanted = WEP_BFG10K;
+	self.weapon = WEP_HANDGRENADE;
+	self.weapon_wanted = self.weapon;
 	self.ammo_inventory[(WeaponList[self.weapon])->ammo_pool] = 50;
 	self.weapon_current = WeaponList[self.weapon];
 	self.weapon_inventory[self.weapon] = 1;
 	//*/
 	
-	self.items = 0;
+	Weapon_StartAnimation(self, WEP_ANIM_DRAW1);
 };
 
 void PlayerRespawn()

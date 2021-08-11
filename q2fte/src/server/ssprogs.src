@@ -8,6 +8,11 @@ fteextensions.qc
 gamedefs.qc
 ../shared/player_defs.qc
 
+// ent
+ent_net.qc
+
+// combat
+antilag.qc
 combat.qc
 
 ../shared/anim_defs.qc
@@ -25,10 +30,7 @@ combat.qc
 ../shared/weapons/bfg10k.qc
 ../shared/weapons/weapons.qc
 
-// combat
-antilag.qc
-
-//items
+// items
 items.qc
 
 // player

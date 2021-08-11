@@ -10,10 +10,18 @@ int 	prediction_thinktrigger;
 float	is_spectator;
 float	cmd_forceimpulse;
 
+.void()	cleanup_func;
+
+.float	updatetime;
+.float	part_time;
+.vector	old_origin;
+.string	noise;
+
 .float	lerp_time;
 .float	lerp_stepsize;
 .float	skin_shader;
 
+.float	framenum;
 .float	vdmg_time;
 .float	vdmg_lerptime;
 .vector	vdmg_angles;

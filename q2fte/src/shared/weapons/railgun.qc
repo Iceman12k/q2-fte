@@ -1,6 +1,4 @@
-
-
-
+vector PL_GetBarrelPos(entity ent);
 
 void Railgun_Frame(entity ent)
 {
@@ -24,16 +22,18 @@ void Railgun_Fire(entity ent)
 {
 	ent.ammo_inventory[AMMO_SLUGS]--;
 	
+	makevectors(input_angles + ent.viewkick_angles);
+	vector aim = v_forward;
+	aim *= 10240;
+	trace_t shot;
+	
 	#ifdef SSQC
 	sound(ent, CHAN_WEAPON, "weapons/railgf1a", 1, ATTN_NORM);
 	
 	
-	makevectors(ent.v_angle + ent.viewkick_angles);
-	vector aim = v_forward;
-	aim *= 10240;
-	trace_t shot;
 	CB_Hitscan_Attack(&shot, ent, aim, 100, 200, DFL_PENETRATE, 0);
-	trailparticles(particleeffectnum("q2part.teq2_railtrail"), ent, shot->endpos, PL_GetBarrelPos(ent));
+	RailTrail_Send(ent, shot->endpos, PL_GetBarrelPos(ent) + (v_forward * 8));
+	//trailparticles(particleeffectnum("q2part.teq2_railtrail"), ent, shot->endpos, PL_GetBarrelPos(ent));
 	
 	
 	#endif
@@ -41,6 +41,10 @@ void Railgun_Fire(entity ent)
 	if (prediction_playeffects)
 	{
 		localsound("weapons/railgf1a", CHAN_WEAPON, 1);
+		
+		vector offs = PL_GetBarrelPos(ent) + (v_forward * 8);
+		traceline_full(&shot, offs, offs + aim, MOVE_NORMAL, ent);
+		trailparticles(EFFECT_TRAIL_RAILGUN, ent, shot->endpos, offs);
 	}
 	#endif
 	

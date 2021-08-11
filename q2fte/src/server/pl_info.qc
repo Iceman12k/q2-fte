@@ -11,7 +11,7 @@ void PL_Sound(entity ent, float channel, int num, float vol, float attn)
 	WriteByte(MSG_MULTICAST, vol * 100);
 	WriteByte(MSG_MULTICAST, attn * 50);
 	
-	multicast(ent.origin, MULTICAST_PHS);
+	multicast(ent.origin, MULTICAST_PHS_R);
 }
 
 

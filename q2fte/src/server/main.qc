@@ -28,6 +28,8 @@ void worldspawn()
 	
 	W_Init();
 	IT_Init();
+	
+	clientstat(STAT_PING, EV_FLOAT, ping);
 }
 
 void SpectatorThink()

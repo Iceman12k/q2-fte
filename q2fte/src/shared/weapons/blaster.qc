@@ -1,5 +1,55 @@
 
 
+#ifdef SSQC
+void Plasma_Touch()
+{
+	if (other.takedamage == DMG_TAKE_PLAYER)
+	{
+		PL_TakeDamage(self.origin, other, self, self.owner, 15, 1, 0, 0);
+	}
+	
+	pointparticles(EFFECT_EXPLOSION_BLASTER, self.origin, trace_plane_normal);
+	remove(self);
+}
+
+void Plasma_Physics()
+{
+	traceline(self.origin, self.origin + self.velocity * frametime, MOVE_NORMAL, self);
+	self.origin = trace_endpos;
+	
+	if (trace_fraction < 1)
+	{
+		entity oself = self;
+		self = trace_ent;
+		other = oself;
+		if (self.touch)
+			self.touch();
+		
+		self = oself;
+		other = trace_ent;
+		if (self.touch)
+			self.touch();
+		
+		self = oself;
+	}
+}
+
+entity Plasma_Fire()
+{
+	entity mis = spawn();
+	setmodel(mis, "models/objects/laser/tris");
+	setsize(mis, '0 0 0', '0 0 0');
+	mis.solid = SOLID_BBOX;
+	mis.modelflags = MF_TRACER;
+	mis.customphysics = Plasma_Physics;
+	mis.touch = Plasma_Touch;
+	mis.SendEntity = Proj_SendEntity;
+	
+	//sound(mis, CHAN_VOICE, "weapons/rockfly", 1, ATTN_IDLE, 100, SOUNDFLAG_FOLLOW, 0);
+	return mis;
+}
+#endif
+
 
 
 void Blaster_Frame(entity ent)
@@ -17,6 +67,13 @@ void Blaster_Frame(entity ent)
 		
 		#ifdef SSQC
 		sound(ent, CHAN_WEAPON, "weapons/blastf1a", 1, ATTN_NORM);
+		
+		makevectors(ent.v_angle);
+		entity mis = Plasma_Fire();
+		mis.owner = self;
+		mis.velocity = v_forward * 1000;
+		mis.angles = [-ent.v_angle_x, ent.v_angle_y, ent.v_angle_z];
+		setorigin(mis, PL_GetBarrelPos(ent) + (v_forward * 8));
 		#endif
 		#ifdef CSQC
 		if (prediction_playeffects)

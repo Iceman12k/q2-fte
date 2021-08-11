@@ -29,6 +29,7 @@ clientdefs.qc
 view.qc
 cs_pl_info.qc
 cs_player.qc
+cs_ents.qc
 
 hud.qc
 main.qc

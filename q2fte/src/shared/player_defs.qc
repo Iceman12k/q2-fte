@@ -6,6 +6,7 @@
 
 .vector		view_ofs;
 
+.float		updaterate;
 .float		painsound_ignore_time;
 .float		attack_finished;
 .float 		client_time;

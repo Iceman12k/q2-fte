@@ -47,8 +47,8 @@ void Chaingun_Frame(entity ent, float move_time)
 			makevectors(ent.v_angle + ent.viewkick_angles);
 			vector aim = v_forward;
 			aim *= 8192;
-			aim += v_right * crandom() * DEFAULT_BULLET_HSPREAD;
-			aim += v_up * crandom() * DEFAULT_BULLET_VSPREAD;
+			aim += v_right * crandom() * DEFAULT_CHAINGUN_HSPREAD;
+			aim += v_up * crandom() * DEFAULT_CHAINGUN_VSPREAD;
 			trace_t shot;
 			CB_Hitscan_Attack(&shot, ent, aim, 6, 2, 0, EFFECT_IMPACT_WALL);
 			#endif

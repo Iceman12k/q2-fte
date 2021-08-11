@@ -66,6 +66,7 @@ void CSQC_Parse_Event()
 	{
 		case NPKT_VIEWKICK: NetRead_ViewKick(); break;
 		case NPKT_PLAYERSOUND: NetRead_PlayerSound(); break;
+		case NPKT_EFFECT_RAIL: NetRead_Effect_Rail(); break;
 	}
 }
 
@@ -77,7 +78,8 @@ void CSQC_Ent_Update(float isnew)
 	switch (entity_type)
 	{
 		case NENT_PLAYER: EntUpdate_Player(isnew); break;
-		
+		case NENT_PROJ: EntUpdate_Proj(isnew); break;
+		case NENT_GENERIC: EntUpdate_Generic(isnew); break;
 	}
 }
 
@@ -100,6 +102,9 @@ void CSQC_Ent_Remove()
 	
 	if (self.weapon_held)
 		remove(self.weapon_held);
+	
+	if (self.cleanup_func != __NULL__)
+		self.cleanup_func();
 	
 	remove(self);
 }

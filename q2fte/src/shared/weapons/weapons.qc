@@ -78,6 +78,13 @@ void W_Init()
 	EFFECT_IMPACT_WALL = particleeffectnum("q2part.teq2_gunshot");
 	EFFECT_IMPACT_BLOOD = particleeffectnum("q2part.teq2_blood");
 	EFFECT_TELEPORT = particleeffectnum("q2part.ev_player_teleport");
+	EFFECT_EXPLOSION_ROCKET = particleeffectnum("q2part.teq2_rocket_explosion");
+	EFFECT_EXPLOSION_GRENADE = particleeffectnum("q2part.teq2_grenade_explosion");
+	EFFECT_EXPLOSION_BLASTER = particleeffectnum("q2part.teq2_blaster");
+	EFFECT_TRAIL_ROCKET = particleeffectnum("q2part.trq2_rocket");
+	EFFECT_TRAIL_GRENADE = particleeffectnum("q2part.trq2_grenade");
+	EFFECT_TRAIL_BLASTER = particleeffectnum("q2part.TR_BLASTERTRAIL");
+	EFFECT_TRAIL_RAILGUN = particleeffectnum("q2part.teq2_railtrail");
 }
 
 

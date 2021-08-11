@@ -5,7 +5,7 @@ void PL_DamageFeedback(entity ent);
 
 vector PL_GetBarrelPos(entity ent)
 {
-	return ent.origin + (ent.view_ofs - '0 0 8') + ent.sview_height;
+	return ent.origin + (ent.view_ofs - '0 0 8') + [0, 0, ent.sview_height];
 }
 
 int PL_ArmorSave(vector pos, entity targ, entity attacker, float damage, int dflags)

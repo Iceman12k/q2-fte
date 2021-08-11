@@ -54,8 +54,8 @@ void Machinegun_Frame(entity ent)
 		makevectors(ent.v_angle + ent.viewkick_angles);
 		vector aim = v_forward;
 		aim *= 8192;
-		aim += v_right * crandom() * DEFAULT_BULLET_HSPREAD;
-		aim += v_up * crandom() * DEFAULT_BULLET_VSPREAD;
+		aim += v_right * crandom() * DEFAULT_MACHINEGUN_HSPREAD;
+		aim += v_up * crandom() * DEFAULT_MACHINEGUN_VSPREAD;
 		trace_t shot;
 		CB_Hitscan_Attack(&shot, ent, aim, 8, 2, 0, EFFECT_IMPACT_WALL);
 		#endif

@@ -1,5 +1,69 @@
 
 
+#ifdef SSQC
+void Grenade_Explode()
+{
+	CB_RadiusDamage(self, self.owner, self.origin, 160, 120, 160, 0, other);
+	
+	pointparticles(EFFECT_EXPLOSION_GRENADE, self.origin);
+	
+	sound(self, CHAN_VOICE, "", 1, ATTN_IDLE);
+	remove(self);
+}
+
+void Grenade_Touch()
+{
+	if (other.takedamage == DMG_TAKE_NOT)
+	{
+		sound(self, CHAN_VOICE, "weapons/grenlb1b", 1, ATTN_NORM);
+		return;
+	}
+	
+	
+	if (other.takedamage == DMG_TAKE_PLAYER)
+	{
+		PL_TakeDamage(self.origin, other, self, self.owner, 110, 140, 0, 0);
+		Grenade_Explode();
+	}
+}
+
+void Grenade_Think()
+{
+	if (time >= self.think_time)
+	{
+		other = world;
+		Grenade_Explode();
+		return;
+	}
+	
+	
+	self.SendFlags = 1;
+	self.nextthink = time + 1/self.updaterate;
+	self.think = Grenade_Think;
+}
+
+entity Grenade_Fire()
+{
+	entity mis = spawn();
+	setmodel(mis, "models/objects/grenade/tris");
+	setsize(mis, '0 0 0', '0 0 0');
+	mis.solid = SOLID_BBOX;
+	mis.movetype = MOVETYPE_BOUNCE;
+	mis.modelflags = MF_GRENADE;
+	mis.SendEntity = EntGeneric_SendEntity;
+	mis.avelocity = '300 300 300';
+	mis.updaterate = 80;
+	mis.touch = Grenade_Touch;
+	
+	mis.think_time = time + 2.5;
+	
+	mis.nextthink = time + 1/mis.updaterate;
+	mis.think = Grenade_Think;
+	
+	return mis;
+}
+#endif
+
 
 
 void GrenadeLauncher_Frame(entity ent)
@@ -21,6 +85,21 @@ void GrenadeLauncher_Frame(entity ent)
 		
 		#ifdef SSQC
 		sound(ent, CHAN_WEAPON, "weapons/grenlf1a", 1, ATTN_NORM);
+		
+		
+		makevectors(ent.v_angle);
+		entity mis = Grenade_Fire();
+		mis.owner = self;
+		mis.angles = [-ent.v_angle_x, ent.v_angle_y, ent.v_angle_z];
+		setorigin(mis, PL_GetBarrelPos(ent) + (v_forward * 8));
+		
+		mis.velocity = v_forward * 600;
+		
+		float scale = 200 + crandom() * 10;
+		mis.velocity += scale * v_up;
+		scale = crandom() * 10;
+		mis.velocity += scale * v_right;
+		
 		#endif
 		#ifdef CSQC
 		if (prediction_playeffects)

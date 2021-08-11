@@ -66,7 +66,7 @@ void Chaingun_Frame(entity ent, float move_time)
 		{
 			#ifdef SSQC
 			sound(ent, CHAN_ITEM, "weapons/chngnl1a", 0.7, ATTN_IDLE, 0, SOUNDFLAG_FOLLOW);
-			sound(ent, CHAN_WEAPON, "weapons/chngnu1a", 1, ATTN_IDLE, 0, SOUNDFLAG_FOLLOW);
+			sound(ent, CHAN_WEAPON, "weapons/chngnu1a", 1, ATTN_IDLE);
 			#endif
 			#ifdef CSQC
 			if (prediction_playeffects)
@@ -110,7 +110,7 @@ void Chaingun_Spin(entity ent)
 	{
 		#ifdef SSQC
 		if (ent.wep_animation == WEP_ANIM_FIRE2)
-			sound(ent, CHAN_ITEM, "weapons/chngnd1a", 1, ATTN_IDLE, 0, SOUNDFLAG_FOLLOW);
+			sound(ent, CHAN_ITEM, "weapons/chngnd1a", 1, ATTN_IDLE);
 		#endif
 		
 		Weapon_StartAnimation(ent, WEP_ANIM_FIRE3);

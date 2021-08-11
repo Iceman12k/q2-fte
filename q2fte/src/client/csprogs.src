@@ -27,6 +27,7 @@ clientdefs.qc
 ../shared/phys.qc
 ../shared/pl.qc
 view.qc
+cs_pl_info.qc
 cs_player.qc
 
 hud.qc

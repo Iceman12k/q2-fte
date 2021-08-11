@@ -877,15 +877,17 @@ void EntUpdate_Player(float isnew)
 		string o_tex = self.skin_texture;
 		
 		self.skin_folder = ReadString();
-		self.skin_model = ReadString();
 		self.skin_texture = ReadString();
+		PlayerInfo_Update(self.entnum, self.skin_folder, self.skin_texture);
 		
-		if (self.skin_texture != o_tex)
+		playerinfo_t *pinfo = PlayerInfo[255];
+		if (self.entnum < 255)
 		{
-			setcustomskin(self, strcat(self.skin_texture, ".skin"), strcat("replace \"\" \"", self.skin_texture, "\""));
+			pinfo = PlayerInfo[self.entnum];
+			setcustomskin(self, strcat(pinfo->skin, ".skin"), strcat("replace \"\" \"", pinfo->skin, "\""));
 		}
 		
-		setmodel(self, self.skin_model);
+		setmodel(self, pinfo->model);
 	}
 }
 

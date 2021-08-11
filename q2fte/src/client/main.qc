@@ -13,6 +13,7 @@ void CSQC_Init(float apilevel, string enginename, float engineversion)
 	loadfont("", "arial", "24", FONT_HUD, 0, 0);
 	loadfont("", "arial", "outline=2", FONT_HUD, 0, 0);
 	
+	PlayerInfo_SoundDefInit();
 	W_Init();
 	viewmodel_primary = spawn();
 	
@@ -63,9 +64,9 @@ void CSQC_Parse_Event()
 	
 	switch (msg_type)
 	{
-		case NPKT_VIEWKICK: NetRead_ViewKick();
+		case NPKT_VIEWKICK: NetRead_ViewKick(); break;
+		case NPKT_PLAYERSOUND: NetRead_PlayerSound(); break;
 	}
-	
 }
 
 void CSQC_Ent_Update(float isnew)

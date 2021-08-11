@@ -111,6 +111,8 @@ void spawnfunc_item_health()
 	
 	if !(self.respawn_time)
 		self.respawn_time = RESPAWNTIME_HEALTH;
+		
+	droptofloor(self);
 }
 
 void spawnfunc_item_health_small()
@@ -217,6 +219,8 @@ void IT_ArmorPickup()
 	self.modelflags |= MF_ROTATE;
 	self.touch = IT_ArmorPickup_Touch;
 	self.solid = SOLID_TRIGGER;
+	
+	droptofloor(self);
 }
 
 void spawnfunc_item_armor_shard()
@@ -322,6 +326,8 @@ void IT_WeaponPickup()
 	
 	self.touch = IT_WeaponPickup_Touch;
 	self.solid = SOLID_TRIGGER;
+	
+	droptofloor(self);
 }
 
 

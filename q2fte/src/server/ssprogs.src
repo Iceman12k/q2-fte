@@ -32,6 +32,7 @@ antilag.qc
 items.qc
 
 // player
+pl_info.qc
 ../shared/phys.qc
 ../shared/pl.qc
 pl_net.qc

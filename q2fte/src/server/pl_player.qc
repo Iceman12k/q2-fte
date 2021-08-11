@@ -4,7 +4,7 @@ void PL_SetSkin(entity ent, string mdl, string skin)
 {
 	ent.skin_folder = strcat("players/", mdl, "/");
 	ent.skin_model = strcat(ent.skin_folder, "tris");
-	ent.skin_texture = strcat(ent.skin_folder, skin);
+	ent.skin_texture = skin;
 	
 	precache_model(ent.skin_model);
 }
@@ -62,6 +62,22 @@ void PL_DamageFeedback(entity ent)
     }
 	
 	
+	if (ent.damage_blood > 0 && ent.client_time >= ent.painsound_ignore_time)
+	{
+		int mod = random() > 0.5;
+		
+		if (ent.health > 75)
+			PL_Sound(ent, CHAN_PAIN, PLSOUND_PAIN100_1 + mod, 1, ATTN_VOICE);
+		else if (ent.health > 50)
+			PL_Sound(ent, CHAN_PAIN, PLSOUND_PAIN75_1 + mod, 1, ATTN_VOICE);
+		else if (ent.health > 25)
+			PL_Sound(ent, CHAN_PAIN, PLSOUND_PAIN50_1 + mod, 1, ATTN_VOICE);
+		else
+			PL_Sound(ent, CHAN_PAIN, PLSOUND_PAIN25_1 + mod, 1, ATTN_VOICE);
+		
+		ent.painsound_ignore_time = ent.client_time + 0.5;
+	}
+	
 	ListElement_Entity *list = (ent.viewer_list)->head;
 	while (list != __NULL__)
 	{
@@ -92,7 +108,12 @@ void ClientConnect(optional float csqcactive)
 	
 	LinkedList_Entity_RemoveEntity(self, self.watching.viewer_list);
 	
-	PL_SetSkin(self, "male", "grunt");
+	string skn = infokey(self, "skin");
+	if (skn != __NULL__)
+	{
+		tokenizebyseparator(skn, "/");
+		PL_SetSkin(self, argv(0), argv(1));
+	}
 	
 	bprint(self.netname); //print player name
 	bprint(" connected.\n");
@@ -143,6 +164,7 @@ void PlayerSpawn()
 	self.health = self.max_health;
 	self.damage_from = world;
 	
+	pointparticles(EFFECT_TELEPORT, self.spawnpoint.origin);
 	setorigin(self, self.spawnpoint.origin + [0,0,1]);
 	self.velocity = 0;
 	

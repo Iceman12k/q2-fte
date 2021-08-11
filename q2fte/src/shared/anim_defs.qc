@@ -112,7 +112,7 @@ void Anim_Simulate(entity ent, float move_time, animstate_t **anim, animframe_t 
 			if ((oldframe)->sample != __NULL__)
 			{
 				#ifdef SSQC
-				sound(ent, CHAN_WEAPON, (oldframe)->sample, 1, ATTN_NORM, 0, SOUNDFLAG_FOLLOW);
+				sound(ent, CHAN_WEAPON, (oldframe)->sample, 1, ATTN_NORM);
 				#endif
 				#ifdef CSQC
 				if (prediction_playeffects)

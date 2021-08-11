@@ -44,6 +44,12 @@ void PL_Death(vector pos, entity ent, entity attacker, int dmg)
 		attacker.frags++;
 	}
 	
+	#ifdef SSQC
+	int mod = floor(random() * 4);
+	PL_Sound(ent, CHAN_PAIN, PLSOUND_DEATH1 + mod, 1, ATTN_VOICE);
+	ent.painsound_ignore_time = ent.client_time + 1;
+	#endif
+	
 	ent.weapon = 0;
 	ent.weapon_wanted = 0;
 	ent.think_time = ent.client_time + 0.25;
@@ -263,13 +269,15 @@ void PL_FallingDamage(entity ent)
            damage = 1;
 		
 		#ifdef SSQC
+		ent.painsound_ignore_time = ent.client_time + 0.1;
+		
 		if (damage < 30)
 		{
-			sound(ent, CHAN_PAIN, strcat(self.skin_folder, "FALL2"), 1, ATTN_VOICE);
+			PL_Sound(ent, CHAN_PAIN, PLSOUND_FALL2, 1, ATTN_VOICE);
 		}
 		else
 		{
-			sound(ent, CHAN_PAIN, strcat(self.skin_folder, "FALL1"), 1, ATTN_VOICE);
+			PL_Sound(ent, CHAN_PAIN, PLSOUND_FALL1, 1, ATTN_VOICE);
 		}
 		#endif
 		
@@ -404,8 +412,10 @@ void PL_RunPhysics()
 			}
 			
 			self.input_lastbuttons = input_buttons;
-			tm -= timestep;
-			continue;
+			#ifdef SSQC
+			PL_DamageFeedback(self);
+			#endif
+			return;
 		}
 		
 		

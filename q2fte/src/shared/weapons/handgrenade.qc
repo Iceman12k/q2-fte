@@ -15,7 +15,7 @@ void HandGrenade_Frame(entity ent)
 			Weapon_StartAnimation(ent, WEP_ANIM_FIRE2);
 			ent.wep_firemode = 0;
 			
-			ent.attack_finished = ent.client_time + 0.7;
+			ent.attack_finished = ent.client_time + 1;
 			
 			#ifdef SSQC
 			sound(ent, CHAN_WEAPON, "weapons/hgrent1a", 1, ATTN_NORM);
@@ -121,6 +121,7 @@ void HandGrenade_Init()
 	{
 		Anim_AddFrame(&(anim->frame_list_head), &(anim->frame_list_tail), i, 10, __NULL__, __NULL__);
 	}
+	Anim_AddFrame(&(anim->frame_list_head), &(anim->frame_list_tail), 15, 2, __NULL__, __NULL__);
 	anim->func_end = Weapon_Generic_Idle;
 }
 

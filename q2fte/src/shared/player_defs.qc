@@ -1,11 +1,12 @@
 
 
-.string		skin_folder;
-.string		skin_model;
 .string		skin_texture;
+.string		skin_model;
+.string		skin_folder;
 
 .vector		view_ofs;
 
+.float		painsound_ignore_time;
 .float		attack_finished;
 .float 		client_time;
 .float		land_time;

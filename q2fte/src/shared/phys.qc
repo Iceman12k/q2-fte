@@ -934,7 +934,7 @@ void PM_CheckJump(entity ent)
 	ent.velocity[2] = max(ent.velocity[2] + jvel, jvel);
 	
 	#ifdef SSQC
-	sound(ent, CHAN_VOICE, strcat(ent.skin_folder, "JUMP1"), 1, ATTN_VOICE);
+	PL_Sound(ent, CHAN_VOICE, PLSOUND_JUMP, 1, ATTN_VOICE);
 	#endif
 }
 

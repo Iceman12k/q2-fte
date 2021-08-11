@@ -330,7 +330,6 @@ float PL_SendEntity(entity to, float sendflags)
 	if (sendflags & 8192)
 	{
 		WriteString(MSG_ENTITY, self.skin_folder);
-		WriteString(MSG_ENTITY, self.skin_model);
 		WriteString(MSG_ENTITY, self.skin_texture);
 	}
 	
